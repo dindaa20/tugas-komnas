@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello, World!</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+      <h1 class="title">Hello World!</h1>
+      <p id="currentTime"></p>
+      <script src="script.js"></script>
+  </body>
+</html><!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aksi Hijau - Hubungkan Kepedulian untuk Lingkungan Tangsel</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+
+    <script>
+        // Web Audio API Sound Generator for Interactive User Feedback
+        const playSynthSound = (type) => {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'success') {
+                    // Uplifting double-tone for successful donation/form
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.12); // E5
+                    osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.24); // G5
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.5);
+                } else if (type === 'correct') {
+                    // Success chime for sorting game
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+                    osc.frequency.setValueAtTime(880.00, ctx.currentTime + 0.08); // A5
+                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.3);
+                } else if (type === 'error') {
+                    // Buzz chime for sorting mistake
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.35);
+                } else if (type === 'click') {
+                    // Soft tactile click
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(450, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.08);
+                }
+            } catch (e) {
+                console.log('AudioContext is pending user action.');
+            }
+        };
+    </script>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 w-full transition-all duration-300 border-b border-slate-100 glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <a href="#home" class="flex items-center space-x-2.5 group">
+                        <div class="bg-brand-600 group-hover:bg-brand-700 text-white p-2.5 rounded-xl shadow-md transition-all">
+                            <i class="fa-solid fa-seedling text-lg sm:text-xl"></i>
+                        </div>
+                        <div>
+                            <span class="font-display font-bold text-lg sm:text-xl text-brand-900 tracking-tight block">Aksi Hijau</span>
+                            <span class="text-[10px] text-brand-600 font-bold uppercase tracking-widest block -mt-1">Tangerang Selatan</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
+                    <a href="#home" class="hover:text-brand-600 transition">Beranda</a>
+                    <a href="#crowdfunding" class="hover:text-brand-600 transition">Donasi Proyek</a>
+                    <a href="#waste-game" class="hover:text-brand-600 transition">Game Edukasi</a>
+                    <a href="#volunteer" class="hover:text-brand-600 transition">Gabung Relawan</a>
+                    <a href="#impact" class="hover:text-brand-600 transition">Dampak Kita</a>
+                </nav>
+
+                <!-- CTA Button Desktop -->
+                <div class="hidden md:flex items-center space-x-3">
+                    <a href="#crowdfunding" onclick="playSynthSound('click')" class="bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-bold py-2.5 px-5 rounded-full shadow-lg shadow-brand-100 transition-all">
+                        Donasi Sekarang
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex md:hidden">
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu(); playSynthSound('click');" class="text-slate-600 hover:text-brand-600 focus:outline-none p-2 rounded-lg hover:bg-slate-100 transition">
+                        <i id="menu-icon" class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Navigation -->
+        <div id="mobile-drawer" class="hidden md:hidden border-t border-slate-100 bg-white/95 backdrop-blur-md px-4 py-4 space-y-2.5 shadow-xl animate-fade-in">
+            <a href="#home" onclick="toggleMobileMenu()" class="block py-3 px-4 rounded-xl font-medium text-slate-700 hover:bg-brand-50 hover:text-brand-600 transition">Beranda</a>
+            <a href="#crowdfunding" onclick="toggleMobileMenu()" class="block py-3 px-4 rounded-xl font-medium text-slate-700 hover:bg-brand-50 hover:text-brand-600 transition">Donasi Proyek</a>
+            <a href="#waste-game" onclick="toggleMobileMenu()" class="block py-3 px-4 rounded-xl font-medium text-slate-700 hover:bg-brand-50 hover:text-brand-600 transition">Game Edukasi</a>
+            <a href="#volunteer" onclick="toggleMobileMenu()" class="block py-3 px-4 rounded-xl font-medium text-slate-700 hover:bg-brand-50 hover:text-brand-600 transition">Gabung Relawan</a>
+            <a href="#impact" onclick="toggleMobileMenu()" class="block py-3 px-4 rounded-xl font-medium text-slate-700 hover:bg-brand-50 hover:text-brand-600 transition">Dampak Kita</a>
+            <div class="pt-4 border-t border-slate-100">
+                <a href="#crowdfunding" onclick="toggleMobileMenu(); playSynthSound('click');" class="block w-full text-center bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition">
+                    Donasi Sekarang
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section id="home" class="relative overflow-hidden bg-gradient-to-b from-brand-50/70 via-white to-slate-50 pt-10 pb-16 sm:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left Side Content -->
+                    <div class="lg:col-span-7 space-y-6 sm:space-y-8 text-center lg:text-left">
+                        <span class="inline-flex items-center space-x-2 bg-brand-100 text-brand-800 text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm">
+                            <i class="fa-solid fa-earth-asia animate-spin-slow text-brand-600"></i>
+                            <span>Gerakan Pemuda Tangerang Selatan</span>
+                        </span>
+                        
+                        <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl text-slate-900 leading-tight">
+                            Nyatakan Aksi Riil Untuk <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-emerald-700">Bumi Tangsel</span> Lebih Asri
+                        </h1>
+                        
+                        <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                            Aksi Hijau adalah wadah aksi bersama pemuda Tangerang Selatan untuk memulihkan ekosistem pesisir lewat restorasi mangrove, sekaligus mendidik warga perkotaan dalam tata kelola sampah pintar. Mari dukung aksi nyata kami!
+                        </p>
+                        
+                        <div class="flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-4">
+                            <a href="#crowdfunding" onclick="playSynthSound('click')" class="w-full sm:w-auto text-center bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-8 rounded-full shadow-xl shadow-brand-100 hover:shadow-brand-200 hover:-translate-y-0.5 transition-all flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-hand-holding-heart"></i>
+                                <span>Ikut Berdonasi</span>
+                            </a>
+                            <a href="#waste-game" onclick="playSynthSound('click')" class="w-full sm:w-auto text-center bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold py-3.5 px-8 rounded-full shadow-sm transition flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-gamepad text-brand-600"></i>
+                                <span>Main Game Pilah Sampah</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Side Showcase Card -->
+                    <div class="lg:col-span-5 relative">
+                        <div class="absolute -inset-1.5 bg-gradient-to-r from-brand-500 to-emerald-600 rounded-3xl blur opacity-25"></div>
+                        <div class="relative bg-white border border-slate-100 p-6 sm:p-8 rounded-3xl shadow-xl space-y-6">
+                            <div class="aspect-video bg-emerald-950 rounded-2xl relative overflow-hidden flex items-center justify-center text-white">
+                                <!-- Simulated Campaign Image with SVG Graphics representing Mangrove / Coast -->
+                                <div class="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-900/60 to-transparent"></div>
+                                <svg class="absolute inset-0 w-full h-full opacity-35" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                    <path d="M0,80 Q25,60 50,80 T100,80 L100,100 L0,100 Z" fill="#0f5132" />
+                                    <path d="M0,90 Q30,75 60,90 T100,90 L100,100 L0,100 Z" fill="#052c16" />
+                                </svg>
+                                <div class="relative text-center p-4">
+                                    <i class="fa-solid fa-tree text-4xl sm:text-5xl text-brand-300 mb-2 animate-bounce"></i>
+                                    <p class="font-display font-bold text-sm sm:text-base tracking-wide">PROYEK RESTORASI UTAMA</p>
+                                    <p class="text-xs text-brand-200 mt-1">Hutan Mangrove Pesisir Muara Tangsel</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                    <span>Total Dana Terkumpul</span>
+                                    <span class="text-brand-600" id="hero-progress-pct">72%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                                    <div class="bg-brand-600 h-full rounded-full transition-all duration-1000" style="width: 72%"></div>
+                                </div>
+                                <div class="flex justify-between items-baseline pt-1">
+                                    <span class="text-2xl font-extrabold text-slate-800" id="hero-raised-text">Rp 18.250.000</span>
+                                    <span class="text-xs text-slate-500">dari Rp 25.000.000</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-3 bg-brand-50 p-3.5 rounded-xl border border-brand-100">
+                                <i class="fa-solid fa-users text-brand-700 text-lg"></i>
+                                <div class="text-xs text-brand-900">
+                                    Disokong oleh <strong class="font-bold text-brand-800" id="hero-donors-count">142 Donatur</strong> Tangerang Selatan minggu ini.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Counter Metrics Dashboard -->
+        <section id="impact" class="bg-slate-900 text-white py-12 relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,197,94,0.15),transparent_40%)]"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                
+                <div class="text-center max-w-2xl mx-auto mb-10 space-y-2">
+                    <h2 class="font-display font-bold text-2xl sm:text-3xl">Laporan Dampak Kolaborasi</h2>
+                    <p class="text-slate-400 text-sm">Setiap rupiah yang didonasikan dan setiap menit yang Anda berikan berdampak nyata pada lingkungan kita.</p>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-center">
+                    <!-- Counter Card 1 -->
+                    <div class="bg-slate-800/60 border border-slate-700/50 p-6 rounded-2xl shadow-inner transform hover:scale-[1.02] transition">
+                        <div class="inline-flex bg-brand-500/10 text-brand-400 p-3 rounded-xl mb-3">
+                            <i class="fa-solid fa-leaf text-2xl"></i>
+                        </div>
+                        <span class="block text-3xl sm:text-4xl font-extrabold text-white tracking-tight" id="metric-trees">730</span>
+                        <span class="block text-xs sm:text-sm text-slate-400 font-medium mt-1">Mangrove Tertanam</span>
+                    </div>
+
+                    <!-- Counter Card 2 -->
+                    <div class="bg-slate-800/60 border border-slate-700/50 p-6 rounded-2xl shadow-inner transform hover:scale-[1.02] transition">
+                        <div class="inline-flex bg-brand-500/10 text-brand-400 p-3 rounded-xl mb-3">
+                            <i class="fa-solid fa-wallet text-2xl"></i>
+                        </div>
+                        <span class="block text-3xl sm:text-4xl font-extrabold text-white tracking-tight" id="metric-funds">Rp 24,75jt</span>
+                        <span class="block text-xs sm:text-sm text-slate-400 font-medium mt-1">Donasi Terhimpun</span>
+                    </div>
+
+                    <!-- Counter Card 3 -->
+                    <div class="bg-slate-800/60 border border-slate-700/50 p-6 rounded-2xl shadow-inner transform hover:scale-[1.02] transition">
+                        <div class="inline-flex bg-brand-500/10 text-brand-400 p-3 rounded-xl mb-3">
+                            <i class="fa-solid fa-trash-can text-2xl"></i>
+                        </div>
+                        <span class="block text-3xl sm:text-4xl font-extrabold text-white tracking-tight" id="metric-waste">4.210</span>
+                        <span class="block text-xs sm:text-sm text-slate-400 font-medium mt-1">Kg Sampah Terkelola</span>
+                    </div>
+
+                    <!-- Counter Card 4 -->
+                    <div class="bg-slate-800/60 border border-slate-700/50 p-6 rounded-2xl shadow-inner transform hover:scale-[1.02] transition">
+                        <div class="inline-flex bg-brand-500/10 text-brand-400 p-3 rounded-xl mb-3">
+                            <i class="fa-solid fa-hands-holding text-2xl"></i>
+                        </div>
+                        <span class="block text-3xl sm:text-4xl font-extrabold text-white tracking-tight" id="metric-volunteers">208</span>
+                        <span class="block text-xs sm:text-sm text-slate-400 font-medium mt-1">Relawan Terdaftar</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Crowdfunding Campaigns Section -->
+        <section id="crowdfunding" class="py-16 sm:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Section Header -->
+                <div class="text-center max-w-3xl mx-auto mb-14 space-y-3">
+                    <span class="text-brand-600 font-bold text-xs uppercase tracking-widest bg-brand-50 px-3.5 py-1.5 rounded-full border border-brand-100">
+                        Galang Dana Kolaboratif
+                    </span>
+                    <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 leading-tight">
+                        Pilih Kampanye Aksi Lingkungan Anda
+                    </h2>
+                    <p class="text-slate-500 text-sm sm:text-base leading-relaxed">
+                        Penyaluran dana transparan dan dilaporkan secara periodik. Anda dapat memantau progres pengerjaan di lapangan secara real-time.
+                    </p>
+                </div>
+
+                <!-- Campaigns Grid Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+                    
+                    <!-- Campaign Card 1 -->
+                    <div class="bg-slate-50 border border-slate-200/60 rounded-3xl overflow-hidden flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition duration-350">
+                        <div>
+                            <!-- Header Image Mock using SVG -->
+                            <div class="h-48 bg-gradient-to-r from-emerald-800 to-brand-700 relative flex items-center justify-center text-white overflow-hidden p-6">
+                                <div class="absolute inset-0 bg-black/10"></div>
+                                <i class="fa-solid fa-tree-deciduous text-6xl text-brand-200 opacity-20 absolute -right-6 -bottom-4"></i>
+                                <div class="relative space-y-2 text-center">
+                                    <div class="bg-white/10 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold inline-block">Proyek Restorasi Pesisir</div>
+                                    <h3 class="font-display font-bold text-lg sm:text-xl">Restorasi 1.000 Mangrove Pesisir Muara Tangsel</h3>
+                                </div>
+                            </div>
+
+                            <div class="p-6 sm:p-8 space-y-4">
+                                <p class="text-slate-600 text-sm leading-relaxed">
+                                    Mengembalikan sabuk hijau pesisir muara Tangsel yang mulai abrasi akibat arus air yang meluap. Penanaman bibit mangrove jenis Avicennia dan Rhizophora untuk meredam ombak, menyerap karbon, serta menyediakan habitat fauna air payau.
+                                </p>
+
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-xs font-bold text-slate-400">
+                                        <span>Progres Pendanaan</span>
+                                        <span class="text-brand-600" id="camp-1-pct">73%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                        <div class="bg-brand-600 h-full rounded-full transition-all duration-1000" id="camp-1-bar" style="width: 73%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs pt-1">
+                                        <span class="text-slate-700 font-bold" id="camp-1-raised">Rp 18.250.000</span>
+                                        <span class="text-slate-500">Target Rp 25.000.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6 sm:p-8 bg-slate-100/50 border-t border-slate-200/60 flex flex-wrap justify-between items-center gap-4">
+                            <div class="text-xs text-slate-500">
+                                <i class="fa-solid fa-clock-rotate-left mr-1"></i> <strong class="text-slate-700">18 hari</strong> tersisa
+                            </div>
+                            <button onclick="openDonationModal(1); playSynthSound('click')" class="bg-brand-600 hover:bg-brand-700 active:translate-y-0.5 text-white font-bold text-sm py-2.5 px-6 rounded-full shadow transition-all flex items-center space-x-1.5">
+                                <span>Donasi Sekarang</span>
+                                <i class="fa-solid fa-chevron-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Campaign Card 2 -->
+                    <div class="bg-slate-50 border border-slate-200/60 rounded-3xl overflow-hidden flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition duration-350">
+                        <div>
+                            <!-- Header Image Mock using SVG -->
+                            <div class="h-48 bg-gradient-to-r from-teal-800 to-emerald-700 relative flex items-center justify-center text-white overflow-hidden p-6">
+                                <div class="absolute inset-0 bg-black/10"></div>
+                                <i class="fa-solid fa-dumpster text-6xl text-emerald-200 opacity-20 absolute -right-6 -bottom-4"></i>
+                                <div class="relative space-y-2 text-center">
+                                    <div class="bg-white/10 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold inline-block">Proyek Pengelolaan Sampah</div>
+                                    <h3 class="font-display font-bold text-lg sm:text-xl">Fasilitas Bank Sampah Kampung Hijau Serpong</h3>
+                                </div>
+                            </div>
+
+                            <div class="p-6 sm:p-8 space-y-4">
+                                <p class="text-slate-600 text-sm leading-relaxed">
+                                    Pengadaan motor sampah roda tiga, tong sampah pilah untuk warga RT, mesin pencacah organik sederhana, serta pelatihan pembuatan kompos rumahan demi memotong 60% limbah rumah tangga Tangsel langsung dari sumbernya.
+                                </p>
+
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-xs font-bold text-slate-400">
+                                        <span>Progres Pendanaan</span>
+                                        <span class="text-brand-600" id="camp-2-pct">43%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                        <div class="bg-brand-600 h-full rounded-full transition-all duration-1000" id="camp-2-bar" style="width: 433%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs pt-1">
+                                        <span class="text-slate-700 font-bold" id="camp-2-raised">Rp 6.500.000</span>
+                                        <span class="text-slate-500">Target Rp 15.000.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6 sm:p-8 bg-slate-100/50 border-t border-slate-200/60 flex flex-wrap justify-between items-center gap-4">
+                            <div class="text-xs text-slate-500">
+                                <i class="fa-solid fa-clock-rotate-left mr-1"></i> <strong class="text-slate-700">32 hari</strong> tersisa
+                            </div>
+                            <button onclick="openDonationModal(2); playSynthSound('click')" class="bg-brand-600 hover:bg-brand-700 active:translate-y-0.5 text-white font-bold text-sm py-2.5 px-6 rounded-full shadow transition-all flex items-center space-x-1.5">
+                                <span>Donasi Sekarang</span>
+                                <i class="fa-solid fa-chevron-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Recent Activities Stream (Wall of Kindness) -->
+                <div class="mt-16 bg-slate-50 rounded-3xl p-6 sm:p-8 border border-slate-150">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-slate-800 flex items-center space-x-2">
+                                <i class="fa-solid fa-heart text-rose-500 animate-pulse"></i>
+                                <span>Dinding Kebaikan Tangsel</span>
+                            </h3>
+                            <p class="text-xs text-slate-500">Daftar dukungan real-time dari relawan dan pendukung di lapangan.</p>
+                        </div>
+                        <span class="text-xs font-bold text-brand-700 bg-brand-100/70 border border-brand-200 px-3 py-1 rounded-full w-fit">Donasi Simper Aktif</span>
+                    </div>
+
+                    <div id="donor-wall" class="space-y-4 max-h-[280px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Dynamic Donor Posts will be loaded here -->
+                        <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-start space-x-3.5 text-xs">
+                            <div class="bg-indigo-100 text-indigo-700 h-9 w-9 rounded-full font-bold flex items-center justify-center shrink-0">BA</div>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-slate-800 text-sm">Bagas Aditama</span>
+                                    <span class="bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-bold">Rp 150.000</span>
+                                </div>
+                                <p class="text-slate-500 mt-1">"Semangat pemuda Tangsel! Semoga bibit mangrovenya tumbuh subur menahan abrasi."</p>
+                                <span class="text-[10px] text-slate-400 block mt-1">2 jam yang lalu</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-start space-x-3.5 text-xs">
+                            <div class="bg-pink-100 text-pink-700 h-9 w-9 rounded-full font-bold flex items-center justify-center shrink-0">SN</div>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-slate-800 text-sm">Siti Nurhaliza</span>
+                                    <span class="bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-bold">Rp 75.000</span>
+                                </div>
+                                <p class="text-slate-500 mt-1">"Keren banget idenya motor sampah. Sangat mendesak untuk komplek perumahan di Serpong."</p>
+                                <span class="text-[10px] text-slate-400 block mt-1">5 jam yang lalu</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Educational Waste Sorting Game Section -->
+        <section id="waste-game" class="py-16 sm:py-24 bg-brand-50/50 border-y border-brand-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left Side: Game Description and Controls -->
+                    <div class="lg:col-span-5 space-y-6 text-center lg:text-left">
+                        <span class="text-brand-600 font-bold text-xs uppercase tracking-widest bg-brand-100 px-3.5 py-1.5 rounded-full border border-brand-200">
+                            Edukasi Interaktif
+                        </span>
+                        <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-slate-900 leading-tight">
+                            Game Pilah Sampah: Uji Kepedulianmu!
+                        </h2>
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                            Banyak warga Tangerang Selatan belum tahu bahwa memisahkan sampah sesuai kategorinya dapat melipatgandakan peluang sampah daur ulang dan mencegah polusi racun dari limbah B3. 
+                        </p>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 text-xs text-left space-y-3 shadow-inner">
+                            <h4 class="font-bold text-slate-700 flex items-center space-x-1.5">
+                                <i class="fa-solid fa-circle-info text-brand-600"></i>
+                                <span>Aturan Permainan:</span>
+                            </h4>
+                            <ul class="space-y-1.5 text-slate-500 pl-4 list-disc">
+                                <li>Pilih tong sampah yang tepat untuk setiap item sampah yang muncul.</li>
+                                <li><strong>Organik:</strong> Dapat membusuk alami (daun, sisa makanan).</li>
+                                <li><strong>Anorganik:</strong> Sulit terurai, bernilai daur ulang (botol, kaleng).</li>
+                                <li><strong>B3:</strong> Limbah beracun berbahaya (baterai, lampu, obat kadaluarsa).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Game Canvas (Fully Mobile-Friendly Interaction) -->
+                    <div class="lg:col-span-7">
+                        <div class="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden border border-slate-800">
+                            <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(34,197,94,0.1),transparent_50%)]"></div>
+                            
+                            <!-- Game Header Score Board -->
+                            <div class="relative z-10 flex justify-between items-center border-b border-slate-800 pb-4 mb-6">
+                                <div class="flex items-center space-x-2">
+                                    <span class="bg-brand-600 text-white font-bold text-xs px-2.5 py-1 rounded-lg">Level 1</span>
+                                    <span class="text-xs text-slate-400">Pilah Pintar Tangsel</span>
+                                </div>
+                                <div class="flex space-x-6">
+                                    <div class="text-right">
+                                        <span class="text-[10px] text-slate-400 block uppercase">Skor</span>
+                                        <span class="font-mono text-xl font-bold text-brand-400" id="game-score">0</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-[10px] text-slate-400 block uppercase">Nyawa</span>
+                                        <span class="font-mono text-xl font-bold text-rose-500" id="game-hearts">❤️❤️❤️</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Game Board Container -->
+                            <div class="relative z-10 min-h-[220px] flex flex-col justify-between items-center py-4">
+                                <div id="game-start-screen" class="text-center py-6 space-y-4">
+                                    <i class="fa-solid fa-gamepad text-5xl text-brand-400 animate-bounce"></i>
+                                    <h3 class="text-lg font-bold">Siap menguji kemampuan pilah sampah Anda?</h3>
+                                    <button onclick="startGame(); playSynthSound('click')" class="bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-6 rounded-full shadow-lg shadow-brand-900/30 transition">
+                                        Mulai Mainkan
+                                    </button>
+                                </div>
+
+                                <!-- Running Active Game Screen -->
+                                <div id="game-play-screen" class="hidden w-full flex flex-col items-center space-y-6">
+                                    <span class="text-xs text-slate-400 uppercase tracking-widest font-semibold">TENTUKAN PILIHAN UNTUK ITEM:</span>
+                                    
+                                    <!-- Dynamic Floating Active Item Card -->
+                                    <div class="bg-slate-800 border-2 border-slate-700/60 p-6 rounded-2xl flex flex-col items-center justify-center space-y-3 shadow-lg w-full max-w-[280px] animate-fade-in" id="waste-item-card">
+                                        <div class="text-4xl" id="waste-item-emoji">🍌</div>
+                                        <span class="font-bold text-base text-slate-100" id="waste-item-name">Kulit Pisang</span>
+                                    </div>
+
+                                    <!-- Action Category Buttons / The Bins -->
+                                    <div class="grid grid-cols-3 gap-3 w-full">
+                                        <!-- Organik Bin -->
+                                        <button onclick="sortItem('organik'); playSynthSound('click')" class="bg-emerald-950 border border-emerald-800/80 hover:bg-emerald-900 text-emerald-300 py-3.5 px-2 rounded-xl flex flex-col items-center justify-center space-y-2 group transition active:scale-95">
+                                            <i class="fa-solid fa-recycle text-emerald-400 text-xl group-hover:scale-110 transition"></i>
+                                            <span class="text-xs font-bold">ORGANIK</span>
+                                        </button>
+                                        <!-- Anorganik Bin -->
+                                        <button onclick="sortItem('anorganik'); playSynthSound('click')" class="bg-blue-950 border border-blue-800/80 hover:bg-blue-900 text-blue-300 py-3.5 px-2 rounded-xl flex flex-col items-center justify-center space-y-2 group transition active:scale-95">
+                                            <i class="fa-solid fa-trash-can text-blue-400 text-xl group-hover:scale-110 transition"></i>
+                                            <span class="text-xs font-bold">ANORGANIK</span>
+                                        </button>
+                                        <!-- B3 Bin -->
+                                        <button onclick="sortItem('b3'); playSynthSound('click')" class="bg-rose-950 border border-rose-800/80 hover:bg-rose-900 text-rose-300 py-3.5 px-2 rounded-xl flex flex-col items-center justify-center space-y-2 group transition active:scale-95">
+                                            <i class="fa-solid fa-skull-crossbones text-rose-400 text-xl group-hover:scale-110 transition"></i>
+                                            <span class="text-xs font-bold">B3 (Berbahaya)</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Game Over / Victory screen -->
+                                <div id="game-over-screen" class="hidden text-center py-6 space-y-4">
+                                    <i class="fa-solid fa-award text-5xl text-yellow-500 animate-pulse"></i>
+                                    <h3 class="text-lg font-bold">Permainan Selesai!</h3>
+                                    <p class="text-xs text-slate-400" id="game-result-msg">Hebat, Anda telah belajar mengenali berbagai macam sampah warga!</p>
+                                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700/60 inline-block font-mono text-xs">
+                                        Total Skor Anda: <strong class="text-brand-400 text-base" id="game-final-score">0</strong>
+                                    </div>
+                                    <div>
+                                        <button onclick="startGame(); playSynthSound('click')" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-5 rounded-full text-xs shadow transition">
+                                            Ulangi Bermain
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Volunteer & Community Action Form Section -->
+        <section id="volunteer" class="py-16 sm:py-24 bg-white relative overflow-hidden">
+            <div class="absolute right-0 top-1/4 w-80 h-80 bg-brand-100 rounded-full opacity-35 blur-3xl pointer-events-none"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Form Side Left -->
+                    <div class="lg:col-span-7 bg-slate-50 p-6 sm:p-10 rounded-3xl border border-slate-150 shadow-xl">
+                        <div class="mb-8 space-y-2">
+                            <h3 class="font-display font-extrabold text-2xl text-slate-900">Bergabung Menjadi Relawan Lapangan</h3>
+                            <p class="text-sm text-slate-500">Isi formulir singkat di bawah ini. Kami akan menghubungkan Anda dengan koordinator kegiatan pemuda lingkungan di kelurahan terdekat Anda.</p>
+                        </div>
+
+                        <form id="volunteer-form" class="space-y-4 sm:space-y-5" onsubmit="submitVolunteer(event)">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="vol-name">Nama Lengkap *</label>
+                                    <input type="text" id="vol-name" required placeholder="Contoh: Ridwan Kamil" class="w-full bg-white px-4 py-2.5 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="vol-phone">No. WhatsApp Aktif *</label>
+                                    <input type="tel" id="vol-phone" required placeholder="Contoh: 0812XXXXXXXX" class="w-full bg-white px-4 py-2.5 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm transition font-mono">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="vol-area">Wilayah Kecamatan Tangsel *</label>
+                                    <select id="vol-area" required class="w-full bg-white px-4 py-2.5 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm transition">
+                                        <option value="">Pilih Kecamatan</option>
+                                        <option value="Ciputat">Ciputat</option>
+                                        <option value="Ciputat Timur">Ciputat Timur</option>
+                                        <option value="Pamulang">Pamulang</option>
+                                        <option value="Pondok Aren">Pondok Aren</option>
+                                        <option value="Serpong">Serpong</option>
+                                        <option value="Serpong Utara">Serpong Utara</option>
+                                        <option value="Setu">Setu</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="vol-action">Minat Divisi Utama *</label>
+                                    <select id="vol-action" required class="w-full bg-white px-4 py-2.5 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm transition">
+                                        <option value="">Pilih Divisi Utama</option>
+                                        <option value="Mangrove Restorasi">Penanaman Mangrove Pesisir</option>
+                                        <option value="Sosialisasi Sampah">Edukasi & Sosialisasi Warga</option>
+                                        <option value="Operasional Lapangan">Tim Logistik & Operasional</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" onclick="playSynthSound('click')" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-brand-100 transition duration-150 flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>Kirim Pendaftaran Relawan</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right Side Info Cards -->
+                    <div class="lg:col-span-5 space-y-6 sm:space-y-8">
+                        <div class="space-y-3">
+                            <span class="text-brand-600 font-bold text-xs uppercase tracking-widest bg-brand-50 px-3.5 py-1.5 rounded-full border border-brand-100">
+                                Jadwal Terdekat
+                            </span>
+                            <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-slate-900 leading-tight">
+                                Agenda Aksi Terbuka Akhir Pekan
+                            </h3>
+                            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                                Gabung dalam agenda aksi lapangan terdekat. Tidak dipungut biaya apapun, mari gotong royong membawa peralatan sendiri!
+                            </p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- Agenda Card 1 -->
+                            <div class="bg-white border border-slate-150 p-4 rounded-2xl flex items-start space-x-4 shadow-sm">
+                                <div class="bg-brand-50 border border-brand-200 text-brand-700 px-3 py-2 rounded-xl text-center font-bold shrink-0">
+                                    <span class="block text-xl">30</span>
+                                    <span class="block text-[10px] uppercase">Mei</span>
+                                </div>
+                                <div class="text-xs space-y-1">
+                                    <h4 class="font-bold text-slate-800 text-sm">Penanaman 300 Bibit Mangrove Muara</h4>
+                                    <p class="text-slate-500"><i class="fa-solid fa-map-pin text-brand-600 mr-1"></i> Area Pesisir Perbatasan Muara Tangsel</p>
+                                    <span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold text-[9px] uppercase">Terbuka untuk Umum</span>
+                                </div>
+                            </div>
+
+                            <!-- Agenda Card 2 -->
+                            <div class="bg-white border border-slate-150 p-4 rounded-2xl flex items-start space-x-4 shadow-sm">
+                                <div class="bg-brand-50 border border-brand-200 text-brand-700 px-3 py-2 rounded-xl text-center font-bold shrink-0">
+                                    <span class="block text-xl">06</span>
+                                    <span class="block text-[10px] uppercase">Jun</span>
+                                </div>
+                                <div class="text-xs space-y-1">
+                                    <h4 class="font-bold text-slate-800 text-sm">Edukasi Pilah Sampah & Buka Kompos</h4>
+                                    <p class="text-slate-500"><i class="fa-solid fa-map-pin text-brand-600 mr-1"></i> Balai Warga Kampung Hijau Serpong</p>
+                                    <span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold text-[9px] uppercase">Terbuka untuk Umum</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Area -->
+    <footer class="bg-slate-900 text-white border-t border-slate-800 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-xs sm:text-sm space-y-12">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                
+                <div class="md:col-span-6 space-y-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="bg-brand-600 text-white p-2 rounded-lg">
+                            <i class="fa-solid fa-seedling text-lg"></i>
+                        </div>
+                        <span class="font-display font-bold text-lg">Aksi Hijau</span>
+                    </div>
+                    <p class="text-slate-400 leading-relaxed max-w-sm">
+                        Layanan crowdfunding dan edukasi yang dimotori oleh koalisi pemuda peduli kelestarian lingkungan hidup di wilayah Tangerang Selatan.
+                    </p>
+                </div>
+
+                <div class="md:col-span-3 space-y-4">
+                    <h4 class="font-bold text-slate-200 uppercase tracking-wider text-xs">Peta Navigasi</h4>
+                    <ul class="space-y-2 text-slate-400">
+                        <li><a href="#home" class="hover:text-brand-400 transition">Beranda</a></li>
+                        <li><a href="#crowdfunding" class="hover:text-brand-400 transition">Donasi Kampanye</a></li>
+                        <li><a href="#waste-game" class="hover:text-brand-400 transition">Game Pilah Sampah</a></li>
+                        <li><a href="#volunteer" class="hover:text-brand-400 transition">Gabung Relawan</a></li>
+                    </ul>
+                </div>
+
+                <div class="md:col-span-3 space-y-4">
+                    <h4 class="font-bold text-slate-200 uppercase tracking-wider text-xs">Kontak Pemuda</h4>
+                    <ul class="space-y-2 text-slate-400">
+                        <li><i class="fa-solid fa-envelope mr-1 text-brand-400"></i> halo@aksihijau.or.id</li>
+                        <li><i class="fa-solid fa-phone mr-1 text-brand-400"></i> +62 812-3456-7890</li>
+                        <li><i class="fa-solid fa-location-dot mr-1 text-brand-400"></i> Serpong, Tangerang Selatan</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="border-t border-slate-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-slate-500">
+                <p>© 2026 Aksi Hijau Tangerang Selatan. Seluruh hak cipta dilindungi.</p>
+                <div class="flex space-x-4 text-base">
+                    <a href="#" class="hover:text-brand-400"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="hover:text-brand-400"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="hover:text-brand-400"><i class="fa-brands fa-facebook"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Donation Interactive Modal Panel (Simulated Checkout) -->
+    <div id="donation-modal" class="fixed inset-0 z-50 bg-black/60 items-center justify-center p-4 hidden animate-fade-in">
+        <div id="donation-box" class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-100 transform transition-all scale-95 opacity-0">
+            
+            <div class="bg-gradient-to-r from-brand-700 to-emerald-800 p-6 text-white relative">
+                <button onclick="closeDonationModal(); playSynthSound('click')" class="absolute top-4 right-4 text-white/80 hover:text-white bg-black/20 hover:bg-black/30 w-7 h-7 rounded-full flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+                <span class="text-xs bg-white/20 px-3 py-1 rounded-full uppercase tracking-wider font-semibold">Formulir Donasi</span>
+                <h3 class="font-display font-bold text-xl mt-1.5" id="modal-title">Donasi untuk Proyek Mangrove</h3>
+                <p class="text-xs text-brand-200 mt-1">Uang Anda akan disalurkan 100% untuk biaya pengerjaan fisik di lapangan.</p>
+            </div>
+
+            <form id="donation-form" class="p-6 sm:p-8 space-y-4" onsubmit="submitDonation(event)">
+                <input type="hidden" id="campaign-id-holder" value="1">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1" for="don-name">Nama Donatur / Anonim *</label>
+                        <input type="text" id="don-name" required placeholder="Contoh: Bagas Aditama" class="w-full bg-slate-50 px-4 py-2.5 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1" for="don-amount">Jumlah Nominal Donasi *</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 text-sm font-bold">Rp</span>
+                            <input type="number" min="10000" id="don-amount" required placeholder="Contoh: 100000" class="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm transition font-mono">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1" for="don-message">Pesan Kebaikan / Doa (Opsional)</label>
+                    <textarea id="don-message" rows="2" placeholder="Tuliskan kata penyemangat untuk pemuda Tangsel..." class="w-full bg-slate-50 px-4 py-2 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm transition"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Metode Pembayaran Instan (Simulator)</label>
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                        <label class="border-2 border-brand-500 bg-brand-50/50 p-2.5 rounded-xl cursor-pointer flex flex-col items-center justify-center space-y-1 transition active:scale-95">
+                            <input type="radio" name="payment-method" value="qris" checked class="hidden">
+                            <i class="fa-solid fa-qrcode text-brand-600 text-base"></i>
+                            <span class="font-bold text-[10px]">QRIS Tangsel</span>
+                        </label>
+                        <label class="border border-slate-200 p-2.5 rounded-xl cursor-pointer flex flex-col items-center justify-center space-y-1 transition active:scale-95 hover:bg-slate-50">
+                            <input type="radio" name="payment-method" value="ewallet" class="hidden">
+                            <i class="fa-solid fa-mobile-screen-button text-slate-600 text-base"></i>
+                            <span class="font-bold text-[10px]">E-Wallet</span>
+                        </label>
+                        <label class="border border-slate-200 p-2.5 rounded-xl cursor-pointer flex flex-col items-center justify-center space-y-1 transition active:scale-95 hover:bg-slate-50">
+                            <input type="radio" name="payment-method" value="bank" class="hidden">
+                            <i class="fa-solid fa-building-columns text-slate-600 text-base"></i>
+                            <span class="font-bold text-[10px]">Transfer Bank</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" onclick="playSynthSound('click')" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-brand-100 transition duration-150 flex items-center justify-center space-x-1.5">
+                    <i class="fa-solid fa-heart-circle-check"></i>
+                    <span>Kirim Donasi (Simulasi Sukses)</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Alert / Toast Message Overlay -->
+    <div id="toast-message" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-slate-900 text-white p-4 rounded-2xl flex items-center space-x-3.5 shadow-2xl max-w-md border border-slate-700">
+            <div class="bg-brand-500 text-white h-8 w-8 rounded-full flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-check text-sm"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-xs sm:text-sm" id="toast-title">Aksi Berhasil</h4>
+                <p class="text-[11px] text-slate-400 mt-0.5" id="toast-desc">Proses pendaftaran diselesaikan dengan sukses.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Core Application State & Simulation Values ---
+        let state = {
+            totals: {
+                trees: 730,
+                funds: 24750000, // IDR Equivalent of 24.75jt
+                waste: 4210,
+                volunteers: 208
+            },
+            campaigns: {
+                1: {
+                    id: 1,
+                    title: "Restorasi 1.000 Mangrove Pesisir Muara Tangsel",
+                    target: 25000000,
+                    raised: 18250000,
+                },
+                2: {
+                    id: 2,
+                    title: "Fasilitas Bank Sampah Kampung Hijau Serpong",
+                    target: 15000000,
+                    raised: 6500000,
+                }
+            },
+            // Database of recent donor feeds
+            donors: [
+                { name: "Bagas Aditama", amount: 150000, message: "Semangat pemuda Tangsel! Semoga bibit mangrovenya tumbuh subur menahan abrasi.", initials: "BA", time: "2 jam yang lalu" },
+                { name: "Siti Nurhaliza", amount: 75000, message: "Keren banget idenya motor sampah. Sangat mendesak untuk komplek perumahan di Serpong.", initials: "SN", time: "5 jam yang lalu" }
+            ],
+            // Database of volunteer sign-ups
+            volunteersList: []
+        };
+
+        // UI Responsive Navigation Helper
+        const toggleMobileMenu = () => {
+            const drawer = document.getElementById('mobile-drawer');
+            const icon = document.getElementById('menu-icon');
+            if (drawer.classList.contains('hidden')) {
+                drawer.classList.remove('hidden');
+                icon.className = "fa-solid fa-xmark text-xl";
+            } else {
+                drawer.classList.add('hidden');
+                icon.className = "fa-solid fa-bars text-xl";
+            }
+        };
+
+        // Toast Alert Dispatcher
+        const showToast = (title, message) => {
+            const toast = document.getElementById('toast-message');
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-desc').textContent = message;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 4500);
+        };
+
+        // --- Crowdfunding System (Modals & Logic) ---
+        const openDonationModal = (campId) => {
+            const modal = document.getElementById('donation-modal');
+            const box = document.getElementById('donation-box');
+            const titleEl = document.getElementById('modal-title');
+            
+            state.activeCampaignId = campId;
+            const campaignObj = state.campaigns[campId];
+            titleEl.textContent = `Donasi untuk: ${campaignObj.title}`;
+            document.getElementById('campaign-id-holder').value = campId;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                box.classList.remove('scale-95', 'opacity-0');
+                box.classList.add('scale-100', 'opacity-100');
+            }, 50);
+        };
+
+        const closeDonationModal = () => {
+            const modal = document.getElementById('donation-modal');
+            const box = document.getElementById('donation-box');
+            
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 150);
+        };
+
+        const submitDonation = (e) => {
+            e.preventDefault();
+            
+            const campId = parseInt(document.getElementById('campaign-id-holder').value);
+            const name = document.getElementById('don-name').value.trim();
+            const amount = parseInt(document.getElementById('don-amount').value);
+            const message = document.getElementById('don-message').value.trim() || "Menyumbang demi kelestarian alam.";
+
+            if (!name || isNaN(amount) || amount <= 0) return;
+
+            // Update State Data
+            state.campaigns[campId].raised += amount;
+            state.totals.funds += amount;
+            
+            // Calculate simulated trees impact (e.g. Every Rp 25.000 grows 1 mangrove tree)
+            if (campId === 1) {
+                const addedTrees = Math.floor(amount / 25000);
+                state.totals.trees += addedTrees;
+            } else {
+                // Garbage campaign raises manages waste metrics
+                const addedWaste = Math.floor(amount / 10000);
+                state.totals.waste += addedWaste;
+            }
+
+            // Append new donor to feed
+            const initials = name.split(" ").map(w => w.charAt(0)).join("").slice(0, 2).toUpperCase();
+            state.donors.unshift({
+                name: name,
+                amount: amount,
+                message: message,
+                initials: initials,
+                time: "Baru Saja"
+            });
+
+            // Play Feedback Sound
+            playSynthSound('success');
+
+            // Reflect Updates in UI
+            updateUI();
+            closeDonationModal();
+            showToast("Terima Kasih, Donatur!", `Donasi sebesar Rp ${amount.toLocaleString('id-ID')} berhasil masuk simulasi.`);
+
+            // Reset Form Values
+            document.getElementById('donation-form').reset();
+        };
+
+        // Refresh HTML dynamic values
+        const updateUI = () => {
+            // Hero card & metric counters
+            const camp1 = state.campaigns[1];
+            const pct1 = Math.round((camp1.raised / camp1.target) * 100);
+            
+            document.getElementById('hero-progress-pct').textContent = `${pct1}%`;
+            document.getElementById('hero-raised-text').textContent = `Rp ${camp1.raised.toLocaleString('id-ID')}`;
+            document.getElementById('hero-donors-count').textContent = `${state.donors.length + 140} Donatur`;
+
+            // Campaign 1
+            document.getElementById('camp-1-pct').textContent = `${pct1}%`;
+            document.getElementById('camp-1-bar').style.width = `${pct1}%`;
+            document.getElementById('camp-1-raised').textContent = `Rp ${camp1.raised.toLocaleString('id-ID')}`;
+
+            // Campaign 2
+            const camp2 = state.campaigns[2];
+            const pct2 = Math.round((camp2.raised / camp2.target) * 100);
+            document.getElementById('camp-2-pct').textContent = `${pct2}%`;
+            document.getElementById('camp-2-bar').style.width = `${pct2}%`;
+            document.getElementById('camp-2-raised').textContent = `Rp ${camp2.raised.toLocaleString('id-ID')}`;
+
+            // Live counters
+            document.getElementById('metric-trees').textContent = state.totals.trees.toLocaleString('id-ID');
+            document.getElementById('metric-funds').textContent = `Rp ${(state.totals.funds / 1000000).toFixed(2)}jt`;
+            document.getElementById('metric-waste').textContent = state.totals.waste.toLocaleString('id-ID');
+            document.getElementById('metric-volunteers').textContent = state.totals.volunteers.toLocaleString('id-ID');
+
+            // Donor Wall Refresh
+            const donorWall = document.getElementById('donor-wall');
+            donorWall.innerHTML = '';
+            
+            state.donors.forEach(d => {
+                const colors = ['bg-indigo-100 text-indigo-700', 'bg-pink-100 text-pink-700', 'bg-brand-100 text-brand-700', 'bg-amber-100 text-amber-700'];
+                const selectedColor = colors[Math.floor(Math.random() * colors.length)];
+
+                const card = document.createElement('div');
+                card.className = "bg-white p-4 rounded-2xl border border-slate-100 flex items-start space-x-3.5 text-xs animate-fade-in";
+                card.innerHTML = `
+                    <div class="${selectedColor} h-9 w-9 rounded-full font-bold flex items-center justify-center shrink-0">${d.initials}</div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-slate-800 text-sm">${d.name}</span>
+                            <span class="bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-bold">Rp ${d.amount.toLocaleString('id-ID')}</span>
+                        </div>
+                        <p class="text-slate-500 mt-1">"${d.message}"</p>
+                        <span class="text-[10px] text-slate-400 block mt-1">${d.time}</span>
+                    </div>
+                `;
+                donorWall.appendChild(card);
+            });
+        };
+
+        // --- Volunteer Registration Action ---
+        const submitVolunteer = (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('vol-name').value.trim();
+            const phone = document.getElementById('vol-phone').value.trim();
+            const area = document.getElementById('vol-area').value;
+            const action = document.getElementById('vol-action').value;
+
+            if (!name || !phone || !area || !action) return;
+
+            // Increment volunteer counter in state
+            state.totals.volunteers++;
+            state.volunteersList.push({ name, phone, area, action });
+
+            // Feedbacks
+            playSynthSound('success');
+            updateUI();
+            showToast("Relawan Terdaftar!", `Selamat ${name}, data Anda terkirim untuk Divisi ${action} di ${area}.`);
+
+            // Reset form
+            document.getElementById('volunteer-form').reset();
+        };
+
+        // --- Educational Waste Sorting Game Logic ---
+        const wasteItems = [
+            { name: "Sisa Daun Kering", category: "organik", emoji: "🍂" },
+            { name: "Botol Air Plastik", category: "anorganik", emoji: "🧴" },
+            { name: "Baterai Jam Dinding", category: "b3", emoji: "🔋" },
+            { name: "Sisa Tulang Ayam", category: "organik", emoji: "🍗" },
+            { name: "Kaleng Soda Aluminium", category: "anorganik", emoji: "🥫" },
+            { name: "Lampu TL Rusak", category: "b3", emoji: "💡" },
+            { name: "Kertas Kardus Bekas", category: "anorganik", emoji: "📦" },
+            { name: "Botol Obat Kimia", category: "b3", emoji: "🧪" },
+            { name: "Kulit Jeruk & Pisang", category: "organik", emoji: "🍊" }
+        ];
+
+        let gameScore = 0;
+        let gameHearts = 3;
+        let gameActiveIndex = 0;
+
+        const startGame = () => {
+            gameScore = 0;
+            gameHearts = 3;
+            gameActiveIndex = 0;
+            
+            // Shuffle Game Data Array
+            wasteItems.sort(() => Math.random() - 0.5);
+
+            document.getElementById('game-score').textContent = gameScore;
+            document.getElementById('game-hearts').textContent = "❤️❤️❤️";
+
+            document.getElementById('game-start-screen').classList.add('hidden');
+            document.getElementById('game-over-screen').classList.add('hidden');
+            document.getElementById('game-play-screen').classList.remove('hidden');
+
+            loadWasteItem();
+        };
+
+        const loadWasteItem = () => {
+            if (gameHearts <= 0 || gameActiveIndex >= wasteItems.length) {
+                endGame();
+                return;
+            }
+
+            const current = wasteItems[gameActiveIndex];
+            document.getElementById('waste-item-emoji').textContent = current.emoji;
+            document.getElementById('waste-item-name').textContent = current.name;
+        };
+
+        const sortItem = (chosenCategory) => {
+            const current = wasteItems[gameActiveIndex];
+            
+            if (chosenCategory === current.category) {
+                // Correct classification!
+                gameScore += 10;
+                document.getElementById('game-score').textContent = gameScore;
+                playSynthSound('correct');
+                
+                // Update total managing waste counters slightly as progress
+                state.totals.waste += 15;
+                updateUI();
+            } else {
+                // Mistake
+                gameHearts--;
+                playSynthSound('error');
+                
+                // Update hearts graphic UI
+                let heartString = "";
+                for (let i = 0; i < gameHearts; i++) heartString += "❤️";
+                if (heartString === "") heartString = "💀 Game Over";
+                document.getElementById('game-hearts').textContent = heartString;
+            }
+
+            // Move forward
+            gameActiveIndex++;
+            setTimeout(loadWasteItem, 150);
+        };
+
+        const endGame = () => {
+            document.getElementById('game-play-screen').classList.add('hidden');
+            document.getElementById('game-over-screen').classList.remove('hidden');
+            document.getElementById('game-final-score').textContent = gameScore;
+
+            if (gameHearts <= 0) {
+                document.getElementById('game-result-msg').textContent = "Oops! Anda kehabisan nyawa. Pelajari lagi jenis limbah B3 dan Organik ya!";
+            } else {
+                document.getElementById('game-result-msg').textContent = "Selamat! Anda berhasil menyortir semua item dengan tingkat pemahaman yang hebat.";
+            }
+        };
+    </script>
+</body>
+</html>
